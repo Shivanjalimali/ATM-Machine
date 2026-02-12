@@ -31,23 +31,34 @@ exports.getAccountById=async (req,res)=>{
         {
             return res.status(404).json({message:"Account not found"});
         }
+        res.status(200).json(account);
     } catch (error) {
-         res.status(404).json({});
+         res.status(500).json({message:error.message});
     }
 }
 
 exports.updateAccount=async(req,res)=>{
     try {
-        
+        const account=await Account.findByIdAndUpdate(req.params.id,req.body,{new:true});
+        if(!account)
+        {
+            return res.status(404).json({message:"Account not found"});
+
+        }
+         res.status(200).json(account);
     } catch (error) {
-        
+            res.status(500).json({message:error.message});
+
     }
 }
 
-exports.deleteAccount=async(req,res)=>{
-    try {
-        
-    } catch (error) {
-        
-    }
+exports.deleteAccount = async (req, res) => {
+try {
+const account = await Account.findByIdAndDelete(req.params.id);
+if (!account) {
+return res.status(404).json({ message: 'Account not found' });
 }
+res.status(200).json({ message: 'Account deleted successfully' });
+} catch (error) {
+res.status(500).json({ message: error.message });
+}};
